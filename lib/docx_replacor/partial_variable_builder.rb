@@ -1,3 +1,5 @@
+require "active_support/all"
+
 module DocxReplacor
   class PartialVariableBuilder
     attr_reader :build_state
@@ -49,7 +51,7 @@ module DocxReplacor
 
     def replacement_instructions
       instructions = []
-      if @variable_names.include?(@full_variable)
+      if @full_variable.in?(@variable_names)
         instructions.push([@head_index, @head_range, @var_values[@full_variable]])
         @members.each do |member|
           instructions.push([member[:index], member[:range], ""])

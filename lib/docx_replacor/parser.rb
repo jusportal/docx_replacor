@@ -1,5 +1,6 @@
 require "docx_replacor/partial_variable_builder"
 require "docx_replacor/variable"
+require "active_support/all"
 
 module DocxReplacor
   class Parser
@@ -8,7 +9,7 @@ module DocxReplacor
       @full_variables = []
       @partial_variables = []
       @text_arrays = text_arrays
-      @var_values = transform_keys(var_values)
+      @var_values = transform_keys(var_values.with_indifferent_access)
       @variables = @var_values.keys.map(&:to_s)
     end
 
@@ -38,9 +39,11 @@ module DocxReplacor
       full = text.scan(/(\%{1}.+?\%{1})/).flatten.first
 
       unless full && !(head || tail)
-        @partial_variables.push(new_var(index, tail, text, :tail)) if tail
-        @partial_variables.push(new_var(index, head, text, :head)) if head
-        @partial_variables.push(new_var(index, text, text, :body)) if tail.nil? && head.nil? && @partial_variables.last&.type_is_head?
+        @partial_variables.push(new_var(index, tail, text, :tail)) if tail.present?
+        @partial_variables.push(new_var(index, head, text, :head)) if head.present?
+        if tail.nil? && head.nil? && @partial_variables.last&.type.to_s.in?(["head", "body"])
+          @partial_variables.push(new_var(index, text, text, :body))
+        end
       end
     end
 

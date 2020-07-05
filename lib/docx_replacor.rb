@@ -9,12 +9,12 @@ module DocxReplacor
 
     def initialize(file_url)
       @file_buffer = URI.open(file_url)
-      @document = Docx::Document.open(@file_buffer)
+      @document = ::Docx::Document.open(@file_buffer)
       build_text_nodes
     end
 
     def match(target_vars)
-      target_vars.select{|var| document_texts.include?(var.to_s) }
+      target_vars.select{|var| var.to_s.in?(document_texts) }
     end
 
     def substitute(var_values)
@@ -32,7 +32,7 @@ module DocxReplacor
     end
 
     def document_texts
-      @document_texts ||= @text_nodes.flatten.map(&:text).join("")
+      @text_nodes.flatten.map(&:text).join("")
     end
 
     private

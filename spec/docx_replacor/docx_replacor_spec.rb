@@ -2,7 +2,7 @@ require 'docx_replacor'
 
 RSpec.describe DocxReplacor::Document do
   let(:file_url) { "spec/fixtures/test.docx" }
-  let(:var_values) {{ awesome: "Jus Portal", date_of_birth: "01/02/2000" }}
+  let(:var_values) {{ awesome_name: "Jus Portal", date_of_birth: "01/02/2000" }}
 
   subject!(:replacor) { described_class.new(file_url) }
 
@@ -19,7 +19,7 @@ RSpec.describe DocxReplacor::Document do
   end
 
   it "substitute variable values" do
-    expected = "awesome_nameJus Portal_namedate_of_birth01/02/2000awesome_nameJus Portal_namenot_a_variable_name01/02/2000Jus Portal_name(%date_of_birth%) wrote a paragraph on a test file."
+    expected = "awesome_nameJus Portaldate_of_birth01/02/2000awesome_nameJus Portalnot_a_variable_name01/02/2000Jus Portal(01/02/2000) wrote a paragraph on a test file."
     expect(replacor.substitute(var_values).document_texts).to eq expected
   end
 end
