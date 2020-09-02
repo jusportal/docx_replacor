@@ -23,7 +23,14 @@ module DocxReplacor
 
         instructions.each do |i|
           node = @text_nodes[index][i[0]]
-          node.substitute(node.text[i[1]], i[2])
+          value = i[2]
+
+          if value.is_a?(Nokogiri::XML::Element)
+            node.parent.add_next_sibling(value)
+            node.parent.remove
+          else
+            node.substitute(node.text[i[1]], value)
+          end
         end
       end
 

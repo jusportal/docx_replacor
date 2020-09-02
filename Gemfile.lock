@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    docx_replacor (0.1.1)
+    docx_replacor (0.1.2)
 
 GEM
   remote: https://rubygems.org/
